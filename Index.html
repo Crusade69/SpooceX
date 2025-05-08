@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPOOCE X - Stick Figure Space Exploration</title>
+    <style>
+        :root {
+            --black: #000;
+            --white: #fff;
+            --red: #e00;
+            --crypto-orange: #f7931a;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            background-color: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+        }
+        
+        header {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--white);
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--white);
+            position: relative;
+            letter-spacing: 1px;
+        }
+        
+        .logo::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--red);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+        }
+        
+        .hero-logo {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--red);
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 2rem;
+            background-color: var(--red);
+            color: var(--white);
+            border: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-crypto {
+            background-color: var(--crypto-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .mission {
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+        
+        .mission h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .mission-card {
+            padding: 2rem;
+            border: 1px solid var(--white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mission-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        .mission-date {
+            color: var(--red);
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .mission-details {
+            text-align: left;
+            margin: 1rem 0;
+            padding-left: 1rem;
+        }
+
+        .mission-details p {
+            margin: 0.5rem 0;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .mission-details p::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--red);
+        }
+
+        .mission-btn {
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        .stick-rocket {
+            font-size: 2rem;
+            margin: 1rem 0;
+            line-height: 1;
+            white-space: pre;
+        }
+        
+        .stick-astronaut {
+            font-size: 2rem;
+            margin: 1rem 0;
+            line-height: 1;
+            white-space: pre;
+        }
+        
+        .stick-satellite {
+            font-size: 2rem;
+            margin: 1rem 0;
+            line-height: 1;
+            white-space: pre;
+        }
+        
+        footer {
+            padding: 2rem 1rem;
+            text-align: center;
+            border-top: 1px solid var(--white);
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        /* Mission Detail Page Styles */
+        .mission-detail {
+            display: none;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .mission-detail.active {
+            display: block;
+        }
+
+        .mission-detail h2 {
+            color: var(--red);
+            margin-bottom: 0.5rem;
+        }
+
+        .mission-detail-date {
+            color: var(--white);
+            margin-bottom: 1.5rem;
+        }
+
+        .mission-detail-image {
+            font-size: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            line-height: 1;
+            white-space: pre;
+        }
+
+        .mission-detail-content {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .mission-detail-back {
+            display: inline-block;
+            color: var(--red);
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .mission-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .mission-stat {
+            border: 1px solid var(--white);
+            padding: 1rem;
+        }
+
+        .mission-stat h4 {
+            color: var(--red);
+            margin: 0 0 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">SPOOCE X</div>
+        <nav>
+            <ul>
+                <li><a href="#missions">MISSIONS</a></li>
+                <li><a href="#launches">LAUNCHES</a></li>
+                <li><a href="#careers">CAREERS</a></li>
+                <li><a href="#shop">SHOP</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section class="hero">
+        <div class="hero-logo">SPOOCE X</div>
+        <h1>MAKING LIFE MULTIPLANETARY</h1>
+        <p>SPOOCE X is advancing the boundaries of stick figure space technology with the ultimate goal of enabling stick people to live on other planets.</p>
+        <button class="btn btn-crypto">Buy $SPOOCE</button>
+    </section>
+    
+    <section class="mission" id="missions">
+        <h2>RECENT MISSIONS</h2>
+        <div class="mission-grid">
+            <div class="mission-card" onclick="showMission('stickship')">
+                <div class="stick-rocket">
+                   /|\
+                  /*|*\
+                 /~~|~~\
+                /~~~|~~~\
+               /____|____\
+                  / \
+                 /   \
+                /     \
+               /       \
+                </div>
+                <h3>STICKSHIP ORBITAL TEST</h3>
+                <p class="mission-date">June 15, 2023</p>
+                <div class="mission-details">
+                    <p>• First stick-only crewed orbital flight</p>
+                    <p>• 42 stick astronauts onboard</p>
+                    <p>• Perfect stick figure deployment</p>
+                </div>
+                <button class="btn mission-btn" onclick="event.stopPropagation(); showMission('stickship')">Mission Recap</button>
+            </div>
+            
+            <div class="mission-card" onclick="showMission('moonbase')">
+                <div class="stick-astronaut">
+                  O
+                 /|\
+                / | \
+                  / \
+                 /   \
+                </div>
+                <h3>MOON STICK BASE ALPHA</h3>
+                <p class="mission-date">April 3, 2023</p>
+                <div class="mission-details">
+                    <p>• First permanent stick lunar base</p>
+                    <p>• 12 stick modules deployed</p>
+                    <p>• Solar-powered stick facilities</p>
+                </div>
+                <button class="btn mission-btn" onclick="event.stopPropagation(); showMission('moonbase')">Base Tour</button>
+            </div>
+            
+            <div class="mission-card" onclick="showMission('sticklink')">
+                <div class="stick-satellite">
+                  /---\
+                 | O O |
+                  \---/
+                    /\
+                   /  \
+                  /    \
+                </div>
+                <h3>STICKLINK GROUP 42</h3>
+                <p class="mission-date">March 22, 2023</p>
+                <div class="mission-details">
+                    <p>• 42 stick satellites deployed</p>
+                    <p>• Global stick internet coverage</p>
+                    <p>• 100% stick-shaped design</p>
+                </div>
+                <button class="btn mission-btn" onclick="event.stopPropagation(); showMission('sticklink')">View Network</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Detail Pages -->
+    <div id="stickship-detail" class="mission-detail">
+        <a class="mission-detail-back" onclick="hideMission()">← Back to Missions</a>
+        <div class="mission-detail-content">
+            <h2>STICKSHIP ORBITAL TEST</h2>
+            <p class="mission-detail-date">June 15, 2023</p>
+            
+            <div class="mission-detail-image">
+               /|\
+              /*|*\
+             /~~|~~\
+            /~~~|~~~\
+           /____|____\
+              / \
+             /   \
+            /     \
+           /       \
+            </div>
+            
+            <p>The STICKSHIP Orbital Test was a groundbreaking mission that proved stick figures can survive and thrive in space. Our 42 stick astronauts performed flawlessly during the 42-hour orbital flight.</p>
+            
+            <p>Key accomplishments:</p>
+            <ul>
+                <li>First ever stick-figure spacewalk</li>
+                <li>Successful testing of zero-G stick yoga</li>
+                <li>Record-breaking stick formation flying</li>
+                <li>Perfect landing with all stick limbs intact</li>
+            </ul>
+            
+            <div class="mission-stats">
+                <div class="mission-stat">
+                    <h4>DURATION</h4>
+                    <p>42 hours</p>
+                </div>
+                <div class="mission-stat">
+                    <h4>ALTITUDE</h4>
+                    <p>420 km</p>
+                </div>
+                <div class="mission-stat">
+                    <h4>CREW</h4>
+                    <p>42 sticknauts</p>
+                </div>
+                <div class="mission-stat">
+                    <h4>LANDING</h4>
+                    <p>Perfect stick landing</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="moonbase-detail" class="mission-detail">
+        <a class="mission-detail-back" onclick="hideMission()">← Back to Missions</a>
+        <div class="mission-detail-content">
+            <h2>MOON STICK BASE ALPHA</h2>
+            <p class="mission-detail-date">April 3, 2023</p>
+            
+            <div class="mission-detail-image">
+              O
+             /|\
+            / | \
+              / \
+             /   \
+            </div>
+            
+            <p>Moon Stick Base Alpha represents humanity's first permanent stick-figure presence on another celestial body. The base currently houses 12 stick astronauts conducting important lunar research.</p>
+            
+            <p>Base features:</p>
+            <ul>
+                <li>Solar-powered stick habitats</li>
+                <li>Low-gravity stick gymnasium</li>
+                <li>Stick-figure lunar rover garage</li>
+                <li>Emergency stick repair station</li>
+            </ul>
+            
+            <div class="mission-stats">
+                <div class="mission-stat">
+                    <h4>LOCATION</h4>
+                    <p>Lunar South Pole</p>
+                </div>
+                <div class="mission-stat">
+                    <h4>MODULES</h4>
+                    <p>12 connected</p>
+                </div>
+                <div class="mission-stat">
+                    <h4>CREW</h4>
+                    <p>12 sticknauts</p>
+                </div>
+                <div class="mission-stat">
+                    <h4>POWER</h4>
+                    <p>100% solar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sticklink-detail" class="mission-detail">
+        <a class="mission-detail-back" onclick="hideMission()">← Back to Missions</a>
+        <div class="mission-detail-content">
+            <h2>STICKLINK GROUP 42</h2>
+            <p class="mission-detail-date">March 22, 2023</p>
+            
+            <div class="mission-detail-image">
+              /---\
+             | O O |
+              \---/
+                /\
+               /  \
+              /    \
+            </div>
+            
+            <p>The STICKLINK constellation now provides high-speed internet to stick figures worldwide. Group 42 expanded our coverage to remote stick communities across the globe.</p>
+            
+            <p>Network features:</p>
+            <ul>
+                <li>Low-latency stick communications</li>
+                <li>Weather-resistant stick design</li>
+                <li>Self-aligning stick antennas</li>
+                <li>100% stick-shaped components</li>
+            </ul>
+            
+            <div class="mission-stats">
+                <div class="mission-stat">
+                    <h4>SATELLITES</h4>
+                    <p>42 deployed</p>
+                </div>
+                <div class="mission-stat">
+                    <h4>COVERAGE</h4>
+                    <p>Global</p>
+                </div>
+                <div class="mission-stat">
+                    <h4>DESIGN</h4>
+                    <p>100% stick</p>
+                </div>
+                <div class="mission-stat">
+                    <h4>SPEED</h4>
+                    <p>42 Mbps</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-logo">SPOOCE X</div>
+        <div class="social-links">
+            <a href="#">Twitter</a>
+            <a href="#">YouTube</a>
+            <a href="#">Instagram</a>
+        </div>
+        <p>© 2023 SPOOCE X TECHNOLOGIES CORP.</p>
+    </footer>
+
+    <script>
+        function showMission(missionId) {
+            // Hide all mission details
+            document.querySelectorAll('.mission-detail').forEach(detail => {
+                detail.classList.remove('active');
+            });
+            
+            // Hide the missions grid
+            document.getElementById('missions').style.display = 'none';
+            
+            // Show the selected mission detail
+            document.getElementById(missionId + '-detail').classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        
+        function hideMission() {
+            // Hide all mission details
+            document.querySelectorAll('.mission-detail').forEach(detail => {
+                detail.classList.remove('active');
+            });
+            
+            // Show the missions grid
+            document.getElementById('missions').style.display = 'block';
+            
+            // Scroll to missions section
+            document.getElementById('missions').scrollIntoView({behavior: 'smooth'});
+        }
+
+        // Add click handler for Buy $SPOOCE button
+        document.addEventListener('DOMContentLoaded', function() {
+            const buyButton = document.querySelector('.btn-crypto');
+            buyButton.addEventListener('click', function() {
+                alert('$SPOOCE token purchase coming soon! 🚀');
+            });
+        });
+    </script>
+</body>
+</html>
